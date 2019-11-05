@@ -10,7 +10,8 @@ from torch import nn
 dtype = np.float32
 device = t.device("cuda") if t.cuda.is_available() else t.device("cpu")
 
-data_count = 30
+data_count = 300
+test_data_count = 30
 data_len = 1000
 mod = 10  # Maximum size of a data number thing
 
@@ -22,6 +23,10 @@ while len(train_data[0]) < data_len:
     for d in train_data:
         d.append((d[-1] + d[-2]) % mod)
 
+# Split off some data for testing
+test_data = train_data[-test_data_count:]
+train_data = train_data[:-test_data_count]
+
 
 def one_hot(x):
     y = np.zeros(mod, dtype=dtype)
@@ -29,11 +34,15 @@ def one_hot(x):
     return y
 
 
-input_seq = t.Tensor([[one_hot(x) for x in xs[:-1]] for xs in train_data])
-target_classes = t.Tensor([xs[1:] for xs in train_data])
-target_seq = t.Tensor([[one_hot(x) for x in xs[1:]] for xs in train_data])
-input_seq.to(device)
-target_seq.to(device)
+input_seq_train = t.Tensor([[one_hot(x) for x in xs[:-1]] for xs in train_data])
+target_seq_train = t.Tensor([xs[1:] for xs in train_data])
+input_seq_train.to(device)
+target_seq_train.to(device)
+
+input_seq_test = t.Tensor([[one_hot(x) for x in xs[:-1]] for xs in test_data])
+target_seq_test = t.Tensor([xs[1:] for xs in test_data])
+input_seq_test.to(device)
+target_seq_test.to(device)
 
 
 class MyModel(nn.Module):
@@ -75,11 +84,18 @@ optimizer = t.optim.Adam(model.parameters(), lr=lr)
 
 for epoch in range(n_epochs):
     optimizer.zero_grad()
-    output, state = model(input_seq)  # Run all the data through
-    # loss = loss_criterion(output, target_seq.long().view(-1, mod))
-    loss = loss_criterion(output, target_classes.long().view(-1))
+    output, _ = model(input_seq_train)  # Run all the data through
+    # loss = loss_criterion(output, target_seq_train.long().view(-1, mod))
+    loss = loss_criterion(output, target_seq_train.long().view(-1))
     loss.backward()
     optimizer.step()
 
+    output, _ = model(input_seq_test)
+    test_loss = loss_criterion(output, target_seq_test.long().view(-1))
+
     if epoch % 10 == 0:
-        print("Epoch {}; loss {}".format(epoch, loss.item()))
+        print(
+            "Epoch {}; training loss: {}  Testing loss: {}".format(
+                epoch, loss.item(), test_loss.item()
+            )
+        )
