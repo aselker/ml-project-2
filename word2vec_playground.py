@@ -35,7 +35,7 @@ def vectorize_article(article):
     vecs = []
     for word in article:
         if word in model:
-            vecs += model[word]
+            vecs.append(model[word])
     print("Vectorized {} of {} words".format(len(vecs), len(article)))
     return np.asarray(vecs)
 
