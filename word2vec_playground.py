@@ -6,6 +6,7 @@ import gensim
 import numpy as np
 import csv
 import sys
+import multiprocessing as mp
 
 assert sys.argv[1]
 assert sys.argv[2]
@@ -24,10 +25,21 @@ with open(sys.argv[1]) as f:
 
 # Next, word2vec the articles
 
+print("Loading word2vec model...")
 model = gensim.models.KeyedVectors.load_word2vec_format(
     "google/GoogleNews-vectors-negative300.bin", binary=True
 )
 
+
+def vectorize_article(article):
+    vecs = [model[word] for word in article]
+    return np.asarray(vecs)
+
+
+pool = mp.Pool()
+articles_vecs = pool.map(vectorize_article, articles_text)
+
+"""
 articles_vecs = []
 for i, article in enumerate(articles_text):
     vecs = [model[word] for word in article]
@@ -35,6 +47,8 @@ for i, article in enumerate(articles_text):
 
     if i % 100:
         print("Vectorized article {}".format(i))
+"""
 
+print("Saving vectors...")
 articles_vecs = np.asarray(articles_vecs)
 np.save(sys.argv[2], articles_vecs)
