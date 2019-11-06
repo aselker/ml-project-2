@@ -68,7 +68,7 @@ model = MyModel(data_width, data_width, 200, 1)
 model.to(device)
 
 # Define hyperparameters
-n_epochs = 10
+n_epochs = 20
 lr = 0.01
 
 loss_criterion = nn.SmoothL1Loss()
@@ -85,11 +85,11 @@ for epoch in range(n_epochs):
     output, _ = model(input_seq_test)
     test_loss = loss_criterion(output.view(-1), target_seq_test.view(-1))
 
-    if epoch % (min(int(epochs / 20), 1)) == 0:
+    if epoch % 5 == 0:
         print(
             "Epoch {}; training loss: {}  Testing loss: {}".format(
                 epoch, loss.item(), test_loss.item()
             )
         )
 
-torch.save(model, sys.argv[2])
+t.save(model, sys.argv[2])
