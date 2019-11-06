@@ -32,22 +32,16 @@ model = gensim.models.KeyedVectors.load_word2vec_format(
 
 
 def vectorize_article(article):
-    vecs = [model[word] for word in article]
+    vecs = []
+    for word in article:
+        if word in model:
+            vecs += model[word]
     return np.asarray(vecs)
 
 
 pool = mp.Pool()
 articles_vecs = pool.map(vectorize_article, articles_text)
 
-"""
-articles_vecs = []
-for i, article in enumerate(articles_text):
-    vecs = [model[word] for word in article]
-    articles_vecs.append(np.array(vecs))
-
-    if i % 100:
-        print("Vectorized article {}".format(i))
-"""
 
 print("Saving vectors...")
 articles_vecs = np.asarray(articles_vecs)
