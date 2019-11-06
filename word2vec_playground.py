@@ -14,7 +14,7 @@ assert sys.argv[2]
 # Expand CSV reader maximum field size
 csv.field_size_limit(sys.maxsize)
 
-articles = []
+articles_text = []
 with open(sys.argv[1]) as f:
     c = csv.reader(f, delimiter=",")
     next(c)  # Throw away header
