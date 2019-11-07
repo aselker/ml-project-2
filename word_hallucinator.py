@@ -28,3 +28,4 @@ for _ in range(100):
     output, state = model(w2v[words[-1]], state)
     word = w2v.most_similar(positive=output)
     words.append(word)
+    print(word)
