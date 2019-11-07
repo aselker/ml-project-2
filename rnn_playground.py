@@ -69,7 +69,7 @@ model.to(device)
 
 # Define hyperparameters
 n_epochs = 20
-lr = 0.01
+lr = 0.001
 
 loss_criterion = nn.SmoothL1Loss()
 optimizer = t.optim.Adam(model.parameters(), lr=lr)
@@ -92,4 +92,4 @@ for epoch in range(n_epochs):
             )
         )
 
-t.save(model, sys.argv[2])
+t.save({"state_dict": model.state_dict()}, sys.argv[2])
