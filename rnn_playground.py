@@ -64,7 +64,7 @@ class MyModel(nn.Module):
         return out, state
 
 
-model = MyModel(data_width, data_width, 200, 1)
+model = MyModel(data_width, data_width, 200, 4)
 model.to(device)
 
 # Define hyperparameters
