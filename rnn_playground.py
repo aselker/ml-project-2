@@ -64,12 +64,12 @@ class MyModel(nn.Module):
         return out, state
 
 
-model = MyModel(data_width, data_width, 200, 1)
+model = MyModel(data_width, data_width, 200, 4)
 model.to(device)
 
 # Define hyperparameters
 n_epochs = 20
-lr = 0.01
+lr = 0.005
 
 loss_criterion = nn.SmoothL1Loss()
 optimizer = t.optim.Adam(model.parameters(), lr=lr)
