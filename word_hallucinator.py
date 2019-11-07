@@ -21,11 +21,12 @@ w2v = gensim.models.KeyedVectors.load_word2vec_format(
 )
 
 
-words = [w2v["The"]]
+words = ["The"]
 state = None
 
 for _ in range(100):
-    output, state = model(w2v[words[-1]], state)
+    x = t.tensor([[w2v[words[-1]]]])
+    output, state = model(x, state)
     word = w2v.most_similar(positive=output)
     words.append(word)
     print(word)
