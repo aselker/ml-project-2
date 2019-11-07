@@ -28,6 +28,6 @@ for _ in range(100):
     x = t.tensor([[w2v[words[-1]]]])
     output, state = model(x, state)
     output = output[-1].detach().numpy()
-    word = w2v.most_similar(positive=[output])
+    word = w2v.most_similar(positive=[output])[0][0]
     words.append(word)
     print(word)
