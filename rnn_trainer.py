@@ -8,6 +8,8 @@ import numpy as np
 import torch as t
 from torch import nn
 
+from my_model import MyModel
+
 assert sys.argv[1]
 assert sys.argv[2]
 
@@ -34,34 +36,6 @@ target_seq_test = t.Tensor([xs[1:] for xs in test_data])
 
 for x in [input_seq_train, target_seq_train, input_seq_test, target_seq_test]:
     x.to(device)
-
-
-# Define our model
-class MyModel(nn.Module):
-    def __init__(self, input_size, output_size, state_size, n_layers):
-        super(MyModel, self).__init__()
-        self.state_size = state_size
-        self.n_layers = n_layers
-
-        # Recurrent layer
-        self.rnn = nn.RNN(input_size, state_size, n_layers, batch_first=True)
-        # FC layer
-        self.fc = nn.Linear(state_size, output_size)
-
-    def forward(self, x):
-        batch_size = x.size(0)
-
-        # Initialize the state to zeros
-        state = t.zeros(self.n_layers, batch_size, self.state_size)
-
-        # Run the RNN, producing outputs and a final state (I think)
-        out, state = self.rnn(x, state)
-
-        # Reshape and process the outputs
-        out = out.contiguous().view(-1, self.state_size)
-        out = self.fc(out)
-
-        return out, state
 
 
 model = MyModel(data_width, data_width, 200, 4)
@@ -92,4 +66,6 @@ for epoch in range(n_epochs):
             )
         )
 
-t.save({"state_dict": model.state_dict()}, sys.argv[2])
+params = [data_width, data_width, 200, 4]
+
+t.save({"state_dict": model.state_dict(), "params": params}, sys.argv[2])

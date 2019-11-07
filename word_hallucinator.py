@@ -8,17 +8,17 @@ from torch import nn
 
 from my_model import MyModel
 
+print("Loading saved model...")
+saved_data = t.load(sys.argv[1])
+
+model = MyModel(*saved_data["params"])
+model.load_state_dict(saved_data["state_dict"])
+
 
 print("Loading word2vec model...")
 w2v = gensim.models.KeyedVectors.load_word2vec_format(
     "google/GoogleNews-vectors-negative300.bin", binary=True
 )
-
-
-saved_data = t.load(sys.argv[1])
-
-model = MyModel(*saved_data["params"])
-model.load_state_dict(saved_data["state_dict"])
 
 
 words = [w2v["The"]]
