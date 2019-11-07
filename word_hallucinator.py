@@ -27,6 +27,7 @@ state = None
 for _ in range(100):
     x = t.tensor([[w2v[words[-1]]]])
     output, state = model(x, state)
-    word = w2v.most_similar(positive=output)
+    output = output[-1].detach().numpy()
+    word = w2v.most_similar(positive=[output])
     words.append(word)
     print(word)
