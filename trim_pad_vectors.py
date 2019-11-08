@@ -13,7 +13,7 @@ articles = np.load(sys.argv[1], allow_pickle=True)
 lengths = [len(a) for a in articles]
 
 print("Max length:", max(lengths))
-cutoff_len = int(np.quantile(lengths, 0.7))
+cutoff_len = int(np.quantile(lengths, 0.4))
 print("Cutoff length:", cutoff_len)
 
 articles = [a[:cutoff_len] for a in articles if len(a) > 0]

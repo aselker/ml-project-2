@@ -17,6 +17,7 @@ dtype = np.float32
 device = t.device("cuda") if t.cuda.is_available() else t.device("cpu")
 
 all_data = np.load(sys.argv[1])
+np.random.shuffle(all_data)
 
 data_count = len(all_data)
 data_len = len(all_data[0])
@@ -42,8 +43,8 @@ model = MyModel(data_width, data_width, 200, 4)
 model.to(device)
 
 # Define hyperparameters
-n_epochs = 20
-lr = 0.001
+n_epochs = 30
+lr = 0.01
 
 loss_criterion = nn.SmoothL1Loss()
 optimizer = t.optim.Adam(model.parameters(), lr=lr)
@@ -59,7 +60,7 @@ for epoch in range(n_epochs):
     output, _ = model(input_seq_test)
     test_loss = loss_criterion(output.view(-1), target_seq_test.view(-1))
 
-    if epoch % 5 == 0:
+    if epoch % 1 == 0:
         print(
             "Epoch {}; training loss: {}  Testing loss: {}".format(
                 epoch, loss.item(), test_loss.item()
