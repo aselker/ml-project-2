@@ -1,0 +1,11 @@
+I feel like I learned a good amount about RNNs-in-practice here.  No theory, but that wasn't really my goal.  This is the first time I've written a working Pytorch app from scratch.
+
+Most of my effort was spent on wrangling large datasets.  The articles, clipped to length and word2vecced, were about 37G, and my code loaded them all into memory at once, so I had to use Deepthought instead of my laptop to train the network.  Even the word2vec model barely fit in my laptop's memory; I had to close everything else.  
+
+I didn't have to do as much data mining or cleaning this time, which I enjoyed.  That's an important part (the most important part?) of ML-in-practice, but it also seems easier to pick up in a non-academic environment.
+
+My model never worked, but it was moving in the direction of working.
+
+13/15 engagement
+
+Git repo is at https://github.com/aselker/ml-project-2; see "rnn_trainer.py" and "word_hallucinator.py" for most of the meat.
